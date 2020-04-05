@@ -20,7 +20,7 @@
 > - 将`watcher`重新放到队列中`queueWatcher`，会先过滤，如果是相同的`watcher`会被过滤掉 => 更新，
 > - `nextTick`异步清空`watcher`队列
 #### 4.组件中的data为什么必须是函数
-- 由于js原型的特性，如果
+- 防止实例中的data冲突，组件中的data通过return一个函数达到数据自治的目的
 #### 5.nextTick实现原理
 - 使用宏任务和微任务定义了一个异步方法，多次调用nextTick会将方法存入队列，通过这个异步方法清空当前队列，所以是个异步方法
 > - `nextTick(cb)`传入一个回调方法cb
@@ -32,10 +32,10 @@
 #### 7.Vue中deep: true是如何实现的
 - 当用户指定了watch中的deep属性为true时，如果当前监控的值是数组类型，会对对象中的每一项进行求值，此时会将当前watcher放入对应属性的依赖中，这样数组中的对象发生变化时，也会通知数据更新
 #### 8.Vue生命周期
-- beforeCreated() 在实例初始化后，数据观察之前调用
+- beforeCreate() 在实例初始化后，数据观察之前调用
 - created() 实例已经创建完成后被调用，在这一步，实例已完成数据观察，属性和方法的运算，watch/event事件回调，但是没有$el 
   + 进行数据、资源请求
-- beforeMount) 在挂载开始之前调用，相关的render函数首次被调用
+- beforeMount() 在挂载开始之前调用，相关的render函数首次被调用
 - mounted() el被新创建的`vm.$el`替换, 并挂载到实例上之后调用该钩子
   + 可以进行DOM操作
 - beforeUpdate() 数据更新是调用，发生在虚拟DOM重新渲染之前

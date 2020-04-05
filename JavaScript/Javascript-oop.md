@@ -35,3 +35,18 @@ function Fn() {
 }
 var f = new Fn(); // Fn是类，f是Fn的实例
 ```
+##### new运算符做了哪些操作
+- 创建了一个空对象（堆内存），将这个对象指向构造函数的prototype属性
+- 并且将函数中的执行主体this指向这个空对象
+- 如果该函数没有返回对象，则返回第一步创建的对象
+```javascript
+/*
+ * @desc 实现new运算
+ */
+function createNew() {
+    const F = [].shift.call(arguments);
+    const obj = Object.create(F.prototype); // 一个继承F.prototype的新对象被创建
+    const result = F.apply(obj, arguments); // 绑定this到新的对象上
+    return typeof result === 'object' ? result : obj;
+}
+```

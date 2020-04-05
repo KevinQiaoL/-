@@ -1,29 +1,3 @@
-/// 事件侦听器
-class CusTEvent {
-    constructor() {}
-    addEv(ele, type, handler) {
-        if (ele.addEventListener) {
-            ele.addEventListener(type, handler, false);
-        } else if (ele.attachEvent) {
-            ele.attachEvent('on' + type, () => {
-                /// this重新指向
-                handler.call(ele);
-            })
-        } else {
-            ele['on' + type] = handler;
-        }
-    }
-    removeEv(ele, type, handler) {
-        if (ele.removeEventListener) {
-            ele.removeEventListener(type, handler, false);
-        } else if (ele.detachEvent) {
-            ele.detachEvent('on' + type, handler);
-        } else {
-            ele['on' + type] = null;
-        }
-    }
-}
-// 实现简单的Promise
 const PENDING = 'pending';
 const RESOLVED = 'resolved';
 const REJECTED = 'rejected';
@@ -99,45 +73,3 @@ MyPromise.prototype.then = function(onResolved, onRejected) {
         onRejected(this.value);
     }
 }
-// 封装typeof
-function getType(value) {
-    if (value === null) {
-        return value + '';
-    }
-    // 引用类型
-    if (typeof value === 'object') {
-        let valueClass = Object.prototype.toString.call(value);
-        let type = valueClass.split(' ')[1].split('');
-        type.pop(); // 移除最后一位 ']'
-        return type.join('').toLowerCase();
-    } else {
-        return typeof value
-    }
-}
-// 手写观察者模式
-const observers = (function() {
-    const topics = {};
-    return {
-        // 注册监听事件
-        subscribe: function(topic, handler) {
-            if (!topics.hasOwnProperty(topic)) {
-                topics[topic] = [];
-            }
-            topics[topic].push(handler);
-        },
-        // 发布事件，触发观察者回调
-        publish: function (topic, ...args) {
-            if (topics.hasOwnProperty(topic)) {
-                topics[topic].forEach(handler => handler(...args));
-            }
-        },
-        // 移除一个事件回调
-        remove: function (topic, handler) {
-            const handlerIdx = topics[topic].findIndex(item => item === handler);
-            if (handlerIdx >= 0) {
-                return topics[topic].splice(handlerIdx, 1)
-            }
-        }
-    };
-})();
-// 手写eventEmiter
