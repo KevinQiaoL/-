@@ -106,10 +106,8 @@ function getType(value) {
     }
     // 引用类型
     if (typeof value === 'object') {
-        let valueClass = Object.prototype.toString.call(value);
-        let type = valueClass.split(' ')[1].split('');
-        type.pop(); // 移除最后一位 ']'
-        return type.join('').toLowerCase();
+        let valueClass = Object.prototype.toString.call(value).slice(8,-1);
+        return valueClass.toLowerCase();
     } else {
         return typeof value
     }
